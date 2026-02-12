@@ -118,13 +118,37 @@ npm start
 
 ---
 
+---
+
 ## 📸 Project Screenshots
 
-All UI screenshots are available here:
+<p align="center">
 
-[📄 View Project Screenshots](snapshots.pdf)
+<img src="assets/1.png" width="45%"/>
+<img src="assets/2.png" width="45%"/>
+
+<img src="assets/3.png" width="45%"/>
+<img src="assets/4.png" width="45%"/>
+
+<img src="assets/5.png" width="45%"/>
+<img src="assets/6.png" width="45%"/>
+
+<img src="assets/7.png" width="45%"/>
+<img src="assets/8.png" width="45%"/>
+
+<img src="assets/9.png" width="45%"/>
+<img src="assets/10.png" width="45%"/>
+
+<img src="assets/11.png" width="45%"/>
+<img src="assets/12.png" width="45%"/>
+
+<img src="assets/13.png" width="45%"/>
+<img src="assets/14.png" width="45%"/>
+
+</p>
 
 ---
+
 
 ## 🔮 Future Improvements
 
