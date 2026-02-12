@@ -120,11 +120,9 @@ npm start
 
 ## 📸 Project Screenshots
 
-All UI screenshots are available inside:
+All UI screenshots are available here:
 
-```
-snapshots.pdf
-```
+[📄 View Project Screenshots](snapshots.pdf)
 
 ---
 
