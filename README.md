@@ -159,13 +159,21 @@ npm start
 
 ---
 
+---
+
 ## 👨‍💻 Author
 
-Developed by **Shahiduddin (Shaho)**  
-Vidyavardhini College of Enginnering
-B.E. Computer Engineering  
+<p align="center">
 
+<b>Shahiduddin Shaikh (Shaho)</b>  
+<br/>
+Bachelor of Engineering – Computer Engineering  
+<br/>
+Vidyavardhini College of Engineering, Vasai
+
+</p>
 ---
+
 
 <p align="center">
 ⭐ If you like this project, consider giving it a star!
