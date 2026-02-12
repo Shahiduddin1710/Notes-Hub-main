@@ -171,9 +171,7 @@ Bachelor of Engineering – Computer Engineering
 <br/>
 Vidyavardhini College of Engineering, Vasai
 
-</p>
 ---
-
 
 <p align="center">
 ⭐ If you like this project, consider giving it a star!
