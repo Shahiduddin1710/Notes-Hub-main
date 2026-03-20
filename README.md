@@ -6,6 +6,12 @@
 </p>
 
 <p align="center">
+  <a href="https://noteshub-five.vercel.app" target="_blank">
+    <img src="https://img.shields.io/badge/🚀 Live%20Demo-Visit%20Site-blue?style=for-the-badge" />
+  </a>
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/MERN-Stack-green?style=for-the-badge">
   <img src="https://img.shields.io/badge/React-Frontend-blue?style=for-the-badge">
   <img src="https://img.shields.io/badge/Node.js-Backend-success?style=for-the-badge">
@@ -50,7 +56,6 @@ NotesHub is a MERN stack web application that provides structured academic notes
 
 ---
 
-
 ## ⚙️ Environment Variables
 
 Create `.env` file inside backend folder:
@@ -73,7 +78,7 @@ GET /api/notes/:university/:semester/:subject
 
 ---
 
-##  Getting Started
+## 🚀 Getting Started
 
 ### Clone Repository
 
@@ -118,38 +123,6 @@ npm start
 
 ---
 
----
-
-## 📸 Project Screenshots
-
-<p align="center">
-
-<img src="assets/1.png" width="45%"/>
-<img src="assets/2.png" width="45%"/>
-
-<img src="assets/3.png" width="45%"/>
-<img src="assets/4.png" width="45%"/>
-
-<img src="assets/5.png" width="45%"/>
-<img src="assets/6.png" width="45%"/>
-
-<img src="assets/7.png" width="45%"/>
-<img src="assets/8.png" width="45%"/>
-
-<img src="assets/9.png" width="45%"/>
-<img src="assets/10.png" width="45%"/>
-
-<img src="assets/11.png" width="45%"/>
-<img src="assets/12.png" width="45%"/>
-
-<img src="assets/13.png" width="45%"/>
-<img src="assets/14.png" width="45%"/>
-
-</p>
-
----
-
-
 ## 🔮 Future Improvements
 
 - Admin Dashboard  
@@ -159,17 +132,15 @@ npm start
 
 ---
 
----
-
 ## 👨‍💻 Author
 
 <p align="center">
-
 <b>Shahiduddin Shaikh (Shaho)</b>  
 <br/>
 Bachelor of Engineering – Computer Engineering  
 <br/>
 Vidyavardhini College of Engineering, Vasai
+</p>
 
 ---
 
