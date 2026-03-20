@@ -137,7 +137,7 @@ npm start
 <p align="center">
 <b>Shahiduddin Shaikh (Shaho)</b>  
 <br/>
-Bachelor of Engineering – Computer Engineering  
+Bachelor of Engineering in Computer Engineering  
 <br/>
 Vidyavardhini College of Engineering, Vasai
 </p>
