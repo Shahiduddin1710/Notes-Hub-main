@@ -3,18 +3,6 @@
   <p align="center">
     Structured Academic Notes Platform for Mumbai University & MSBTE Students
   </p>
-  <p align="center">
-    <a href="https://noteshub-five.vercel.app" target="_blank">
-       Live Demo
-    </a>
-  </p>
-</p>
-
-
-<p align="center">
-  <a href="https://noteshub-five.vercel.app" target="_blank">
-    <img src="https://img.shields.io/badge/🚀 Live%20Demo-Visit%20Site-blue?style=for-the-badge" />
-  </a>
 </p>
 
 <p align="center">
@@ -24,6 +12,12 @@
   <img src="https://img.shields.io/badge/MongoDB-Database-brightgreen?style=for-the-badge">
   <img src="https://img.shields.io/badge/Supabase-Storage-orange?style=for-the-badge">
 </p>
+
+---
+
+## 🌐 Live Site
+
+**Live Site:** https://noteshub-five.vercel.app
 
 ---
 
