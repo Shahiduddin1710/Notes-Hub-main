@@ -3,7 +3,13 @@
   <p align="center">
     Structured Academic Notes Platform for Mumbai University & MSBTE Students
   </p>
+  <p align="center">
+    <a href="https://noteshub-five.vercel.app" target="_blank">
+       Live Demo
+    </a>
+  </p>
 </p>
+
 
 <p align="center">
   <a href="https://noteshub-five.vercel.app" target="_blank">
