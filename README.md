@@ -23,23 +23,22 @@
 
 ---
 
-## 📖 About NotesHub
+## About NotesHub
 NotesHub is a MERN stack web application that provides structured academic notes categorized by university, semester, and subject. The platform helps students easily browse, preview, and download study materials.
 
 ---
 
-## ✨ Features
-- 🔐 User Authentication
-- 📜 Terms & Conditions Acceptance
-- 🏫 University-wise Notes Access
-- 📚 Semester & Subject Navigation
-- 📂 File Preview & Download
-- 📞 Contact Support
-- 📱 Responsive UI
+## Features
+- User Authentication
+- Terms & Conditions Acceptance
+- University-wise Notes Access
+- Semester & Subject Navigation
+- File Preview & Download
+- Contact Support
 
 ---
 
-## 🧰 Tech Stack
+## Tech Stack
 
 ### Frontend
 - React.js (JSX)
@@ -57,7 +56,7 @@ NotesHub is a MERN stack web application that provides structured academic notes
 
 ---
 
-## 👨‍💻 Author
+## Author
 <p align="center">
 <b>Shahiduddin Shaikh (Shaho)</b>
 <br/>
