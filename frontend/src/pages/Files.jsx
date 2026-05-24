@@ -1,0 +1,632 @@
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import "./pages.css";
+
+const PROTECTED_KEYWORDS = [
+  "important-answers",
+  "important-questions",
+  "important answers",
+  "important questions",
+  "answers",
+  "internal-assessments",
+  "manual"
+];
+
+const isProtectedFile = (fileName) => {
+  const lower = fileName.toLowerCase();
+  return PROTECTED_KEYWORDS.some((kw) => lower.includes(kw));
+};
+
+
+const DotsLoader = () => (
+  <div className="dots-loader-wrap">
+    <p className="dots-loader-label">Loading Files</p>
+    <div className="dots-loader">
+      <span className="dot" />
+      <span className="dot" />
+      <span className="dot" />
+    </div>
+  </div>
+);
+
+const ClockIcon = () => (
+  <svg
+    width="40"
+    height="40"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="12" cy="12" r="10" />
+    <polyline points="12 6 12 12 16 14" />
+  </svg>
+);
+
+const AlertIcon = () => (
+  <svg
+    width="40"
+    height="40"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="12" cy="12" r="10" />
+    <line x1="12" y1="8" x2="12" y2="12" />
+    <line x1="12" y1="16" x2="12.01" y2="16" />
+  </svg>
+);
+
+const LockIcon = () => (
+  <svg
+    width="40"
+    height="40"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+  </svg>
+);
+
+const BackIcon = () => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polyline points="15 18 9 12 15 6" />
+  </svg>
+);
+
+
+const AuthGate = ({ fileName, onClose, onLogin, onSignup }) => (
+  <div
+    style={{
+      position: "fixed",
+      inset: 0,
+      zIndex: 1000,
+      background: "rgba(15,23,42,0.55)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "1rem",
+    }}
+  >
+    <div
+      style={{
+        background: "white",
+        borderRadius: "20px",
+        padding: "2.5rem 2rem",
+        maxWidth: "420px",
+        width: "100%",
+        boxShadow: "0 20px 60px rgba(0,0,0,0.15)",
+        textAlign: "center",
+        animation: "slideUp 0.22s ease-out",
+      }}
+    >
+      <div
+        style={{
+          width: 72,
+          height: 72,
+          borderRadius: "50%",
+          background: "#eef2ff",
+          color: "#4f46e5",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          margin: "0 auto 1.25rem",
+        }}
+      >
+        <LockIcon />
+      </div>
+
+      <h2
+        style={{
+          fontSize: "1.3rem",
+          fontWeight: 800,
+          color: "#0f172a",
+          margin: "0 0 0.5rem",
+        }}
+      >
+        Login Required
+      </h2>
+
+      <p
+        style={{
+          fontSize: "0.9rem",
+          color: "#64748b",
+          lineHeight: 1.7,
+          margin: "0 0 1.75rem",
+        }}
+      >
+        <strong style={{ color: "#0f172a" }}>{fileName}</strong> is protected
+        content. Login or create an account to access and download this file.
+      </p>
+
+      <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
+        <button
+          onClick={onLogin}
+          style={{
+            flex: 1,
+            padding: "0.8rem 1rem",
+            borderRadius: "10px",
+            border: "none",
+            background: "#4f46e5",
+            color: "white",
+            fontWeight: 600,
+            fontSize: "0.9rem",
+            cursor: "pointer",
+            fontFamily: "Inter, system-ui, sans-serif",
+          }}
+        >
+          Log In
+        </button>
+        <button
+          onClick={onSignup}
+          style={{
+            flex: 1,
+            padding: "0.8rem 1rem",
+            borderRadius: "10px",
+            border: "1.5px solid #e2e8f0",
+            background: "white",
+            color: "#374151",
+            fontWeight: 600,
+            fontSize: "0.9rem",
+            cursor: "pointer",
+            fontFamily: "Inter, system-ui, sans-serif",
+          }}
+        >
+          Sign Up
+        </button>
+      </div>
+
+      <button
+        onClick={onClose}
+        style={{
+          marginTop: "1rem",
+          background: "none",
+          border: "none",
+          color: "#94a3b8",
+          fontSize: "0.8rem",
+          cursor: "pointer",
+          fontFamily: "Inter, system-ui, sans-serif",
+        }}
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+);
+
+
+
+const Files = () => {
+  const { university, semester, subject, subSubject } = useParams();
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
+  const [files, setFiles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState(null);
+  const [authGate, setAuthGate] = useState(null);
+  const [merging, setMerging] = useState(false);
+
+  const token = localStorage.getItem("token");
+
+  const mergeUrl = subSubject
+    ? `${import.meta.env.VITE_API_URL}/api/notes/merge/${university}/${semester}/${subject}/${subSubject}`
+    : `${import.meta.env.VITE_API_URL}/api/notes/merge/${university}/${semester}/${subject}`;
+
+  const handleMergeDownload = async () => {
+    setMerging(true);
+    try {
+      const res = await fetch(mergeUrl);
+      if (!res.ok) throw new Error("Merge failed");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${subSubject || subject}-complete-material.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      alert("Failed to download. Please try again.");
+    } finally {
+      setMerging(false);
+    }
+  };
+
+  const apiUrl = subSubject
+    ? `${import.meta.env.VITE_API_URL}/api/notes/${university}/${semester}/${subject}/${subSubject}`
+    : `${import.meta.env.VITE_API_URL}/api/notes/${university}/${semester}/${subject}`;
+
+  const displayTitle = subSubject
+    ? subSubject.toUpperCase().replace(/-/g, " ")
+    : subject.toUpperCase().replace(/-/g, " ");
+
+const handleBack = () => {
+    if (subSubject) {
+      navigate(`/subjects/${university}/${semester}`, {
+        state: { activeParent: subject, university, semester },
+      });
+    } else {
+      navigate(`/subjects/${university}/${semester}`, {
+        state: { university, semester },
+      });
+    }
+  };
+
+const LAB_SUBJECTS = ["dbms-lab", "os-lab", "web-tech-lab"];
+  const folderName = subSubject || subject;
+  const isLabSubject = subject === "lab-experiments" && LAB_SUBJECTS.includes((subSubject || "").toLowerCase());
+  const isFolderProtected = isProtectedFile(folderName) || isLabSubject;
+
+  
+  const folderGate = isFolderProtected && !isAuthenticated;
+
+  useEffect(() => {
+    // If folder is protected and user not logged in, don't fetch
+    if (isFolderProtected && !isAuthenticated) return;
+
+    const fetchFiles = async () => {
+      setLoading(true);
+      setStatus(null);
+      try {
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        const res = await fetch(apiUrl, { headers });
+        const data = await res.json();
+        if (data.success) {
+          const validFiles = data.notes.filter(
+            (file) => !file.name.includes("emptyFolderPlaceholder"),
+          );
+          if (validFiles.length === 0) {
+            setStatus("empty");
+          } else {
+            setFiles(validFiles);
+          }
+        } else {
+          setStatus("empty");
+        }
+      } catch {
+        setStatus("error");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchFiles();
+  }, [apiUrl, token, isFolderProtected, isAuthenticated]);
+
+  const handleFileClick = (file) => {
+    // If file name is protected and user not logged in → show gate
+    if (!isAuthenticated && isProtectedFile(file.name)) {
+      setAuthGate({ fileName: file.name });
+      return;
+    }
+    window.open(file.url, "_blank", "noopener noreferrer");
+  };
+
+  
+  if (folderGate) {
+    return (
+      <>
+        <div className="page-wrapper">
+          <main className="page-container">
+            <div className="hero-card">
+              <button className="subjects-back-btn" onClick={handleBack}>
+                <BackIcon /> Go Back
+              </button>
+              <h1 className="hero-title">{displayTitle} Files</h1>
+            </div>
+            <div className="files-status-card">
+              <div className="files-status-icon files-status-icon--soon">
+                <LockIcon />
+              </div>
+              <h3 className="files-status-title">Login Required</h3>
+              <p className="files-status-desc">
+                This content is protected. Login or create an account to access{" "}
+                <strong>{displayTitle}</strong> files.
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  gap: "10px",
+                  marginTop: "1rem",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                }}
+              >
+                <button
+                  className={`notes-btn ${university === "msbte" ? "msbte" : "mu"}`}
+                 onClick={() => navigate(`/login?redirect=${encodeURIComponent(window.location.pathname)}`)}
+                >
+                  Log In
+                </button>
+                <button
+                  className="notes-btn mu"
+                  style={{
+                    background: "white",
+                    color: "#4f46e5",
+                    border: "1.5px solid #4f46e5",
+                    boxShadow: "none",
+                  }}
+                  onClick={() => navigate(`/signup?redirect=${encodeURIComponent(window.location.pathname)}`)}
+                >
+                  Sign Up
+                </button>
+              </div>
+            </div>
+          </main>
+        </div>
+      </>
+    );
+  }
+
+  if (loading) return <DotsLoader />;
+
+  if (status === "empty") {
+    return (
+      <div className="page-wrapper">
+        <main className="page-container">
+          <div className="hero-card">
+            <button className="subjects-back-btn" onClick={handleBack}>
+              <BackIcon /> Go Back
+            </button>
+            <h1 className="hero-title">{displayTitle} Files</h1>
+          </div>
+          <div className="files-status-card">
+            <div className="files-status-icon files-status-icon--soon">
+              <ClockIcon />
+            </div>
+            <h3 className="files-status-title">Files Coming Soon</h3>
+            <p className="files-status-desc">
+              The files for <strong>{displayTitle}</strong> will be uploaded
+              soon. Check back later!
+            </p>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  if (status === "error") {
+    return (
+      <div className="page-wrapper">
+        <main className="page-container">
+          <div className="hero-card">
+            <button className="subjects-back-btn" onClick={handleBack}>
+              <BackIcon /> Go Back
+            </button>
+            <h1 className="hero-title">{displayTitle} Files</h1>
+          </div>
+          <div className="files-status-card">
+            <div className="files-status-icon files-status-icon--error">
+              <AlertIcon />
+            </div>
+            <h3 className="files-status-title">Failed to Load</h3>
+            <p className="files-status-desc">
+              Something went wrong while loading files. Please try again later.
+            </p>
+            <button
+              className={`notes-btn ${university === "msbte" ? "msbte" : "mu"}`}
+              style={{ marginTop: "1rem" }}
+              onClick={() => window.location.reload()}
+            >
+              Try Again
+            </button>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className="page-wrapper">
+        <main className="page-container">
+          <div className="hero-card">
+            <button className="subjects-back-btn" onClick={handleBack}>
+              <BackIcon /> Go Back
+            </button>
+            <h1 className="hero-title">{displayTitle} Files</h1>
+            <p className="hero-subtitle">
+              {files.length} file{files.length !== 1 ? "s" : ""} available
+            </p>
+          </div>
+
+          <div className="notes-grid">
+            {files.map((file, index) => {
+              const locked = !isAuthenticated && isProtectedFile(file.name);
+              return (
+                <div
+                  key={index}
+                  className="notes-card"
+                  style={{ position: "relative" }}
+                >
+                  {locked && (
+                    <span
+                      style={{
+                        position: "absolute",
+                        top: 14,
+                        right: 14,
+                        background: "#eef2ff",
+                        color: "#4f46e5",
+                        borderRadius: "6px",
+                        padding: "2px 8px",
+                        fontSize: "0.7rem",
+                        fontWeight: 700,
+                      }}
+                    >
+                      <svg
+                        width="11"
+                        height="11"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        style={{ marginRight: 4 }}
+                      >
+                        <rect
+                          x="3"
+                          y="11"
+                          width="18"
+                          height="11"
+                          rx="2"
+                          ry="2"
+                        />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                      </svg>
+                      Login
+                    </span>
+                  )}
+                  <h3
+                    style={{
+                      margin: "0 0 0",
+                      fontWeight: 700,
+                      fontSize: "1.1rem",
+                      color: "#0f172a",
+                      paddingRight: locked ? "60px" : 0,
+                    }}
+                  >
+                    {file.name}
+                  </h3>
+                  <button
+                    onClick={() => handleFileClick(file)}
+                    className={`notes-btn ${university === "msbte" ? "msbte" : "mu"}`}
+                    style={{ marginTop: 14 }}
+                  >
+                    {locked ? (
+                      <span
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "6px",
+                        }}
+                      >
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <rect
+                            x="3"
+                            y="11"
+                            width="18"
+                            height="11"
+                            rx="2"
+                            ry="2"
+                          />
+                          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                        Login to Open
+                      </span>
+                    ) : (
+                      "Open →"
+                    )}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+
+        
+          <div
+            style={{
+              marginTop: "2rem",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <button
+              onClick={handleMergeDownload}
+              disabled={merging}
+              className={`notes-btn ${university === "msbte" ? "msbte" : "mu"}`}
+              style={{
+                padding: "0.9rem 2rem",
+                fontSize: "1rem",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                opacity: merging ? 0.7 : 1,
+                cursor: merging ? "not-allowed" : "pointer",
+              }}
+            >
+              {merging ? (
+                <>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{ animation: "spin 1s linear infinite" }}
+                  >
+                    <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                  </svg>
+                  Merging PDFs...
+                </>
+              ) : (
+                <>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                  Download Complete Material
+                </>
+              )}
+            </button>
+          </div>
+        </main>
+      </div>
+
+    
+      {authGate && (
+        <AuthGate
+          fileName={authGate.fileName}
+          onClose={() => setAuthGate(null)}
+          onLogin={() => navigate("/login")}
+          onSignup={() => navigate("/signup")}
+        />
+      )}
+    </>
+  );
+};
+
+export default Files;

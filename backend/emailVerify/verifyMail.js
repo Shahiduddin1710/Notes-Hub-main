@@ -15,7 +15,7 @@ export const verifyMail = async (token, email) => {
     }
 
 
-    const verifyLink = `http://localhost:8000/api/auth/verify/${token}`;
+const verifyLink = `https://noteshubbackend.vercel.app/api/auth/verify/${token}`;
 
 
 

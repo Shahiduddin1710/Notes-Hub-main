@@ -13,7 +13,7 @@ export const sendOtpMail = async (email, otp) => {
   const mailOptions = {
     from: `NotesHub <${process.env.MAIL_USER}>`,
     to: email,
-    subject: "Password Reset OTP – NotesHub",
+    subject: "Password Reset OTP - NotesHub",
     html: `
       <div style="background:#f1f5f9;padding:30px;font-family:Arial,sans-serif">
         <div style="max-width:500px;margin:auto;background:#ffffff;padding:30px;border-radius:10px">

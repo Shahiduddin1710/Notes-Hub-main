@@ -7,7 +7,7 @@ import { sendOtpMail } from "../emailVerify/sendOtpMail.js";
 import nodemailer from "nodemailer";
 
 
-const FRONTEND_URL = "http://localhost:3000";
+const FRONTEND_URL = "https://noteshub-five.vercel.app/";
 
 //  register
 export const registerUser = async (req, res) => {

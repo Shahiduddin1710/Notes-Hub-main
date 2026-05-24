@@ -750,9 +750,24 @@
   background: white;
   font-family: Inter, system-ui, sans-serif;
 }
+.auth-card button .spinner,
+.auth-spinner {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
 
 .lp-footer-dot {
   color: #cbd5e1;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 
 @media (max-width: 1024px) {
